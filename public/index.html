@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agency Employee Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <style>
+        #agency-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .agency-button {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .agency-button:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="language-switch">
+            <button id="lang-en" class="lang-btn active">🇬🇧</button>
+            <button id="lang-sk" class="lang-btn">🇸🇰</button>
+        </div>
+        <h1 data-lang="title">Agency Employee Management</h1>
+        <div id="auth-container">
+            <input type="email" id="email-input" placeholder="Email">
+            <input type="password" id="password-input" placeholder="Password">
+            <button id="login-button" data-lang="login">Login</button>
+            <button id="signup-button" data-lang="signup">Sign Up</button>
+            <button id="logout-button" data-lang="logout" style="display: none;">Logout</button>
+        </div>
+        <div id="agency-list" style="display: none;">
+            
+        </div>
+        <div id="employee-database" style="display: none;">
+            <h2 id="agency-name"></h2>
+            <button id="back-button" data-lang="back-to-agency">Back to Agency Selection</button>
+            <div id="filter-container">
+                <label for="filter-agency" data-lang="filter-agency">Filter by Agency:</label>
+                <select id="filter-agency">
+                    <option value="" data-lang="all">All</option>
+                </select>
+                <label for="filter-position" data-lang="filter-position">Filter by Position:</label>
+                <select id="filter-position">
+                    <option value="" data-lang="all">All</option>
+                    <option value="operator vyroby" data-lang="operator-vyroby">Operator vyroby</option>
+                    <option value="operator vyroby-sicky" data-lang="operator-vyroby-sicky">Operator vyroby-sicky</option>
+                    <option value="operator logistiky" data-lang="operator-logistiky">Operator logistiky</option>
+                </select>
+                <label for="filter-category" data-lang="filter-category">Filter by Category:</label>
+                <select id="filter-category">
+                    <option value="" data-lang="all">All</option>
+                    <option value="adz">ADZ</option>
+                    <option value="živ">ŽIV</option>
+                </select>
+            </div>
+            <table id="employee-table">
+                <thead>
+                    <tr>
+                        <th data-lang="agency">Agency</th>
+                        <th data-lang="name">Name</th>
+                        <th data-lang="nationality">Nationality</th>
+                        <th data-lang="date-of-birth">Date of Birth</th>
+                        <th data-lang="position">Position</th>
+                        <th data-lang="category">Category</th>
+                        <th data-lang="starting-date">Starting Date</th>
+                        <th data-lang="social-insurance">Social Insurance</th>
+                        <th data-lang="work-documents">Work Documents</th>
+                        <th data-lang="document-status">Document Status</th>
+                        <th data-lang="actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="employee-list"></tbody>
+            </table>
+            <h3 id="form-title" data-lang="add-new-employee">Add New Employee</h3>
+            <form id="employee-form">
+                <select id="employee-agency" required>
+                    <option value="" data-lang="select-agency">Select Agency</option>
+                </select>
+                <input type="text" id="employee-name" data-lang-placeholder="name" placeholder="Name" required>
+                <select id="employee-nationality" required>
+                    <option value="" data-lang="select-nationality">Select Nationality</option>
+                    <option value="Albánska">Albánska</option>
+                    <option value="Bosnianska">Bosnianska</option>
+                    <option value="Česká">Česká</option>
+                    <option value="Gruzínska">Gruzínska</option>
+                    <option value="Indická">Indická</option>
+                    <option value="Indonézska">Indonézska</option>
+                    <option value="Kamerunská">Kamerunská</option>
+                    <option value="Kazašská">Kazašská</option>
+                    <option value="Kirgizská">Kirgizská</option>
+                    <option value="Macedónska">Macedónska</option>
+                    <option value="Maďarská">Maďarská</option>
+                    <option value="Moldavská">Moldavská</option>
+                    <option value="Rumunská">Rumunská</option>
+                    <option value="Ruská">Ruská</option>
+                    <option value="Slovenská">Slovenská</option>
+                    <option value="Srbská">Srbská</option>
+                    <option value="Ukrajinská">Ukrajinská</option>
+                </select>
+                <input type="date" id="employee-dob" required>
+                <select id="employee-position" required>
+                    <option value="" data-lang="select-position">Select Position</option>
+                    <option value="operator vyroby" data-lang="operator-vyroby">Operator vyroby</option>
+                    <option value="operator vyroby-sicky" data-lang="operator-vyroby-sicky">Operator vyroby-sicky</option>
+                    <option value="operator logistiky" data-lang="operator-logistiky">Operator logistiky</option>
+                </select>
+                <select id="employee-category" required>
+                    <option value="" data-lang="select-category">Select Category</option>
+                    <option value="adz">ADZ</option>
+                    <option value="živ">ŽIV</option>
+                </select>
+                <input type="date" id="employee-start-date" required>
+                <button type="submit" id="submit-employee" data-lang="add-employee">Add Employee</button>
+                <button type="button" id="cancel-edit" data-lang="cancel" style="display: none;">Cancel</button>
+            </form>
+        </div>
+    </div>
+    <script src="supabase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
